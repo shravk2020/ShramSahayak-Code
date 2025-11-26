@@ -1,0 +1,76 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 1. Define the Data (From Table 2 in the text)
+metrics = ['VAS Pain Score\n(0-10 Scale)', 'EMG Neck Strain\n(µV)']
+before_means = [7.1, 150]
+before_std = [1.2, 32]
+after_means = [2.9, 57]
+after_std = [0.9, 18]
+
+# Calculate reductions for labels
+reductions = [
+    f"-{((7.1-2.9)/7.1)*100:.0f}%", # VAS reduction
+    f"-{((150-57)/150)*100:.0f}%"   # EMG reduction
+]
+
+# 2. Setup the Plot (1 row, 2 columns for different scales)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5), dpi=300)
+
+# Monochrome Colors (Dark Gray for 'Before', Light Gray for 'After')
+color_before = '#666666'
+color_after = '#CCCCCC'
+edge_color = 'black'
+bar_width = 0.5
+
+# --- Subplot 1: VAS Pain Score ---
+x_pos = [0, 1]
+labels = ['Without Frame', 'With Shram Sahayak']
+values_vas = [before_means[0], after_means[0]]
+errors_vas = [before_std[0], after_std[0]]
+
+bars1 = ax1.bar(x_pos, values_vas, yerr=errors_vas, capsize=5,
+                color=[color_before, color_after], edgecolor=edge_color,
+                linewidth=1, alpha=1.0, width=bar_width)
+
+# Formatting Ax1
+ax1.set_title('(a) Subjective Pain (VAS Score)', fontsize=12, fontweight='bold', color='black')
+ax1.set_ylabel('Score (Lower is Better)', fontsize=10, color='black')
+ax1.set_xticks(x_pos)
+ax1.set_xticklabels(labels, fontsize=10, color='black')
+ax1.set_ylim(0, 10)
+ax1.grid(axis='y', linestyle=':', alpha=0.7, color='gray')
+
+# Add reduction arrow/text (Monochrome)
+ax1.annotate(reductions[0], xy=(1, 2.9), xytext=(0.5, 5),
+             arrowprops=dict(facecolor='black', arrowstyle='->', connectionstyle="arc3,rad=-0.2"),
+             fontsize=12, fontweight='bold', color='black', ha='center')
+
+# --- Subplot 2: EMG Neck Strain ---
+values_emg = [before_means[1], after_means[1]]
+errors_emg = [before_std[1], after_std[1]]
+
+bars2 = ax2.bar(x_pos, values_emg, yerr=errors_emg, capsize=5,
+                color=[color_before, color_after], edgecolor=edge_color,
+                linewidth=1, alpha=1.0, width=bar_width)
+
+# Formatting Ax2
+ax2.set_title('(b) Objective Muscle Strain (EMG)', fontsize=12, fontweight='bold', color='black')
+ax2.set_ylabel('Muscle Activity (µV)', fontsize=10, color='black')
+ax2.set_xticks(x_pos)
+ax2.set_xticklabels(labels, fontsize=10, color='black')
+ax2.set_ylim(0, 200)
+ax2.grid(axis='y', linestyle=':', alpha=0.7, color='gray')
+
+# Add reduction arrow/text (Monochrome)
+ax2.annotate(reductions[1], xy=(1, 57), xytext=(0.5, 110),
+             arrowprops=dict(facecolor='black', arrowstyle='->', connectionstyle="arc3,rad=-0.2"),
+             fontsize=12, fontweight='bold', color='black', ha='center')
+
+# 3. Overall Title and Save
+plt.tight_layout()
+
+output_file = 'fig7_field_trials_bw.png'
+plt.savefig(output_file, bbox_inches='tight')
+print(f"Successfully generated {output_file}")
+plt.show()
